@@ -18,6 +18,7 @@ const port = process.env.PORT || 8000;
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 const uri = process.env.DB_URI;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -77,7 +78,47 @@ res.send(result);  // result ke client e send kora hoy
 
 
 })
+ 
 
+// delete method use kore product delete kora hoy
+
+app.delete("/products/:productId", async (req, res)=> {
+
+   const productId = req.params.productId; 
+
+  //  console.log(productId);
+   const query = { _id: new ObjectId(productId) };
+   const result = await productCollection.deleteOne(query);  // deleteOne() method use kore data delete kora hoy
+   // console.log(result);
+   res.send(result);  // result ke client e send kora hoy
+
+
+
+ })
+
+
+ app.patch("/products/:productId", async (req, res)=> {
+
+const {productId}= req.params ;
+const UpdatedData= req.body
+
+const filter = {_id: new ObjectId(productId)} ;
+
+const updatedDoc = {
+
+$set : {
+
+  ...UpdatedData,
+}
+
+
+}
+
+const result = await productCollection.updateOne (filter, updatedDoc)
+
+res.send (result);
+
+ })
 
 
 
